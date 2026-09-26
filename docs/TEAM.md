@@ -8,8 +8,8 @@
 
 | STT | Họ và tên | MSSV | Vai trò & phần việc chính | Báo cáo cá nhân |
 | ---: | --- | --- | --- | --- |
-| 1 | Phạm Xuân Quý | 2A202602745 | Thu thập dữ liệu, bảo toàn bản gốc, làm sạch dữ liệu và chuẩn bị văn bản tạo vector | `report/individual_report.md` |
-| 2 | Vũ Minh Điềm | 2A202602858 | Thiết lập Quality Gate bằng Great Expectations 1.x; xây dựng benchmark test set | Tạo bản riêng từ mẫu sau khi nghiệm thu |
+| 1 | Phạm Xuân Quý | 2A202602745 | Thu thập dữ liệu, bảo toàn bản gốc, làm sạch dữ liệu và chuẩn bị văn bản tạo vector | `report/PhamXuanQuy-2A202602745.md` |
+| 2 | Vũ Minh Điềm | 2A202602858 | Thiết lập Quality Gate bằng Great Expectations 1.x; xây dựng benchmark test set | `report/VuMinhDiem-2A202602858.md` |
 | 3 | Nguyễn Minh Thịnh | 2A202602556 | Điều phối baseline pipeline; thiết kế và thực thi Data Corruption Suite | Tạo bản riêng từ mẫu sau khi nghiệm thu |
 | 4 | Nguyễn Hoàng Tuyên | 2A202602439 | Đo lường suy giảm, xác minh repair và đối chiếu ba trạng thái Baseline–Corrupted–Repaired | Tạo bản riêng từ mẫu sau khi nghiệm thu |
 

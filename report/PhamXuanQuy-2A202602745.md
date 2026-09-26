@@ -1,4 +1,4 @@
-# Member Role Report — Day 10: Data Pipeline & Data Observability
+# Báo cáo cá nhân — Phạm Xuân Quý
 
 ## 1. Thông tin cá nhân
 
