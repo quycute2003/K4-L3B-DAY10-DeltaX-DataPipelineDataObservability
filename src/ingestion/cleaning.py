@@ -1,114 +1,114 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime
+from html import unescape
+import re
 
 import pandas as pd
 
-from core.utils import compact_join, normalize_whitespace
 from ingestion.crossref import PaperRecord
 
 
-CLEAN_COLUMNS = [
-    "paper_id",
-    "title",
-    "summary",
-    "authors",
-    "categories",
-    "primary_category",
-    "published",
-    "updated",
-    "abs_url",
-    "pdf_url",
-    "comment",
-    "age_days",
-    "authors_joined",
-    "categories_joined",
-    "summary_chars",
-    "text_for_embedding",
-]
+def build_clean_dataframe(records: list[PaperRecord], run_date: datetime) -> pd.DataFrame:
+    """Clean raw records into a dataframe ready for embedding and quality checks."""
+    columns = [
+        "paper_id",
+        "title",
+        "summary",
+        "authors",
+        "categories",
+        "primary_category",
+        "published",
+        "updated",
+        "abs_url",
+        "pdf_url",
+        "comment",
+        "authors_joined",
+        "categories_joined",
+        "summary_chars",
+        "age_days",
+        "text_for_embedding",
+    ]
+    if not records:
+        return pd.DataFrame(columns=columns)
 
+    def normalize_text(value: object) -> str:
+        text = unescape(str(value or ""))
+        text = re.sub(r"<[^>]+>", " ", text)
+        return " ".join(text.split())
 
-def _clean_list(values: list[str] | None) -> list[str]:
-    seen: list[str] = []
-    for value in values or []:
-        cleaned = normalize_whitespace(str(value))
-        if cleaned and cleaned not in seen:
-            seen.append(cleaned)
-    return seen
+    def normalize_list(value: object) -> list[str]:
+        values = value if isinstance(value, list) else [value]
+        normalized: list[str] = []
+        for item in values:
+            text = normalize_text(item)
+            if text and text not in normalized:
+                normalized.append(text)
+        return normalized
 
-
-def _parse_date(value: str | None) -> datetime | None:
-    if not value:
-        return None
-    parsed = pd.to_datetime(normalize_whitespace(str(value)), errors="coerce", utc=True)
-    if pd.isna(parsed):
-        return None
-    return parsed.to_pydatetime()
-
-
-def _build_embedding_text(title: str, authors: str, published: str, categories: str, summary: str) -> str:
-    return "\n".join(
+    frame = pd.DataFrame(
         [
-            f"Title: {title}",
-            f"Authors: {authors}",
-            f"Published: {published}",
-            f"Categories: {categories}",
-            f"Summary: {summary}",
+            {
+                "paper_id": normalize_text(record.paper_id).lower(),
+                "title": normalize_text(record.title),
+                "summary": normalize_text(record.summary),
+                "authors": normalize_list(record.authors),
+                "categories": normalize_list(record.categories),
+                "primary_category": normalize_text(record.primary_category),
+                "published": normalize_text(record.published),
+                "updated": normalize_text(record.updated),
+                "abs_url": normalize_text(record.abs_url),
+                "pdf_url": normalize_text(record.pdf_url),
+                "comment": normalize_text(record.comment),
+            }
+            for record in records
         ]
     )
 
+    frame = frame.drop_duplicates(subset="paper_id", keep="first")
+    frame = frame.loc[
+        frame["paper_id"].ne("") & frame["title"].ne("") & frame["summary"].ne("")
+    ].copy()
+    parsed_published = pd.to_datetime(frame["published"], errors="coerce", utc=True)
+    frame = frame.loc[parsed_published.notna()].copy()
+    parsed_published = parsed_published.loc[frame.index]
 
-def build_clean_dataframe(records: list[PaperRecord], run_date: datetime) -> pd.DataFrame:
-    """Clean raw records into a dataframe ready for embedding."""
-    if run_date.tzinfo is None:
-        run_date = run_date.replace(tzinfo=UTC)
+    parsed_updated = pd.to_datetime(frame["updated"], errors="coerce", utc=True)
+    parsed_updated = parsed_updated.where(parsed_updated.notna(), parsed_published)
+    frame["published"] = parsed_published.dt.strftime("%Y-%m-%d")
+    frame["updated"] = parsed_updated.dt.strftime("%Y-%m-%d")
 
-    rows: list[dict] = []
-    for record in records:
-        paper_id = normalize_whitespace(record.paper_id or "")
-        title = normalize_whitespace(record.title or "")
-        summary = normalize_whitespace(record.summary or "")
-        published_dt = _parse_date(record.published)
-        if not paper_id or not title or not summary or published_dt is None:
-            continue
-        updated_dt = _parse_date(record.updated) or published_dt
+    run_timestamp = pd.Timestamp(run_date)
+    if run_timestamp.tzinfo is None:
+        run_timestamp = run_timestamp.tz_localize("UTC")
+    else:
+        run_timestamp = run_timestamp.tz_convert("UTC")
+    frame["age_days"] = (run_timestamp.normalize() - parsed_published.dt.normalize()).dt.days.astype(int)
 
-        authors = _clean_list(record.authors)
-        categories = _clean_list(record.categories)
-        primary_category = normalize_whitespace(record.primary_category or "") or (categories[0] if categories else "")
-        published = published_dt.date().isoformat()
-        authors_joined = compact_join(authors)
-        categories_joined = compact_join(categories)
+    frame["authors_joined"] = frame["authors"].map(lambda authors: ", ".join(authors) or "Unknown")
+    frame["categories"] = frame["categories"].map(
+        lambda categories: categories or ["Uncategorized"]
+    )
+    frame["categories_joined"] = frame["categories"].map(
+        lambda categories: ", ".join(categories)
+    )
+    frame["primary_category"] = frame.apply(
+        lambda row: row["primary_category"] or row["categories"][0], axis=1
+    )
+    frame["summary_chars"] = frame["summary"].str.len().astype(int)
+    frame["text_for_embedding"] = frame.apply(
+        lambda row: "\n".join(
+            (
+                f"Title: {row['title']}",
+                f"Authors: {row['authors_joined']}",
+                f"Published: {row['published']}",
+                f"Categories: {row['categories_joined']}",
+                f"Summary: {row['summary']}",
+            )
+        ),
+        axis=1,
+    )
 
-        rows.append(
-            {
-                "paper_id": paper_id,
-                "title": title,
-                "summary": summary,
-                "authors": authors,
-                "categories": categories,
-                "primary_category": primary_category,
-                "published": published,
-                "updated": updated_dt.date().isoformat(),
-                "abs_url": normalize_whitespace(record.abs_url or ""),
-                "pdf_url": normalize_whitespace(record.pdf_url or ""),
-                "comment": normalize_whitespace(record.comment or ""),
-                "age_days": (run_date - published_dt).days,
-                "authors_joined": authors_joined,
-                "categories_joined": categories_joined,
-                "summary_chars": len(summary),
-                "text_for_embedding": _build_embedding_text(title, authors_joined, published, categories_joined, summary),
-            }
-        )
-
-    df = pd.DataFrame(rows, columns=CLEAN_COLUMNS)
-    if df.empty:
-        return df
-
-    # Keep the most recently updated version of each paper.
-    df = df.sort_values(["paper_id", "updated"], ascending=[True, False])
-    df = df.drop_duplicates(subset="paper_id", keep="first")
-    df = df.sort_values(["published", "paper_id"], ascending=[False, True]).reset_index(drop=True)
-    df["age_days"] = df["age_days"].astype(int)
-    df["summary_chars"] = df["summary_chars"].astype(int)
-    return df
+    return frame.loc[:, columns].sort_values(
+        ["published", "paper_id"], ascending=[False, True], kind="stable"
+    ).reset_index(drop=True)
