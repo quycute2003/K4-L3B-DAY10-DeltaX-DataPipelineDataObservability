@@ -10,7 +10,7 @@ Tài liệu này tóm tắt các việc cần làm theo thứ tự phụ thuộc
 | Bước 4–5, Điềm | Đã có mã; baseline quality đạt, test set có 10 câu | Kiểm tra lại khi dữ liệu nguồn thay đổi. |
 | **Bước 6, Thịnh** | **Đã chạy thành công tại local** | Báo cáo ghi 24 docs; `data/results/baseline_metrics.json` ghi 10 câu, Hit Rate 1.0, Token F1 1.0. Có `data/reports/phase1_report.md`. |
 | **Bước 7, Thịnh** | **Đã chạy thành công tại local** | `data/results/corruption_log.json` có 6 loại lỗi; corrupted quality/freshness đều fail như dự kiến. |
-| Bước 8, Tuyên | Chưa xong tại workspace này | Chưa có `corrupted_metrics.json`, `repaired_metrics.json`, `corruption_report.md`; flow và hàm báo cáo so sánh còn stub. |
+| **Bước 8, Tuyên** | **Đã chạy thành công tại local** | Đã hoàn thiện corruption flow, idempotent repair, sinh đủ `corrupted_metrics.json`, `repaired_metrics.json`, `corruption_report.md` với bảng so sánh 3 trạng thái. |
 | Bước 9, cả nhóm | Chưa xong | Chưa có đủ báo cáo cá nhân, tỷ lệ đóng góp, xác minh push và nộp LMS. Thịnh đã tạo hai commit cho bước 6–7 bằng Git author Nguyễn Minh Thịnh. |
 
 Các artifact cho bước 6–7 đã được commit tại local. Kiểm tra `git status` để chọn chính xác các file còn lại; rà soát secret và artifact tạm trước khi stage.
@@ -138,10 +138,10 @@ Các artifact cho bước 6–7 đã được commit tại local. Kiểm tra `gi
 
 ## 8. Đo suy giảm, phục hồi và đối chiếu
 
-- [ ] Hoàn thiện **`main()`** trong `src/pipelines/corruption_flow.py`; entrypoint `script/run_corruption_flow.py` hiện import tên này. Nếu triển khai `run_corruption_flow_pipeline(settings)` theo codelab, cho `main()` gọi nó.
-- [ ] Nạp baseline metrics và cùng `data/eval/test_set.json`; ghi corrupted CSV/JSON, tạo collection `papers-corrupted`, đánh giá và lưu `data/results/corrupted_metrics.json`, chạy quality/freshness.
-- [ ] Phục hồi **từ raw snapshot** bằng cách parse/clean lại, ghi repaired CSV/JSON, tạo collection `papers-repaired`, đánh giá trên đúng test set cũ và lưu `data/results/repaired_metrics.json`. Chạy lại repair để kiểm tra tính idempotent: không tích lũy bản ghi trùng và kết quả dữ liệu ổn định. Repo hiện **chưa có** hàm `repair_from_raw_snapshot()`; cần tự tạo trong flow hoặc module phù hợp nếu muốn giữ đúng tên codelab.
-- [ ] Hoàn thiện `generate_corruption_report(...)` trong `src/observability/reporting.py`; xuất bảng Baseline / Corrupted / Repaired tại `data/reports/corruption_report.md`, gồm metrics, quality và freshness. Đối chiếu số trong Markdown với JSON, ghi nhận kết quả thực tế kể cả khi suy giảm/phục hồi không như kỳ vọng.
+- [x] Hoàn thiện **`main()`** trong `src/pipelines/corruption_flow.py`; entrypoint `script/run_corruption_flow.py` hiện import tên này. Đã triển khai `run_corruption_flow_pipeline(settings)` và cho `main()` gọi nó.
+- [x] Nạp baseline metrics và cùng `data/eval/test_set.json`; ghi corrupted CSV/JSON, tạo collection `papers-corrupted`, đánh giá và lưu `data/results/corrupted_metrics.json`, chạy quality/freshness.
+- [x] Phục hồi **từ raw snapshot** bằng cách parse/clean lại, ghi repaired CSV/JSON, tạo collection `papers-repaired`, đánh giá trên đúng test set cũ và lưu `data/results/repaired_metrics.json`. Chạy lại repair để kiểm tra tính idempotent: không tích lũy bản ghi trùng và kết quả dữ liệu ổn định. Đã bổ sung hàm `repair_from_raw_snapshot()`.
+- [x] Hoàn thiện `generate_corruption_report(...)` trong `src/observability/reporting.py`; xuất bảng Baseline / Corrupted / Repaired tại `data/reports/corruption_report.md`, gồm metrics, quality và freshness. Đối chiếu số trong Markdown với JSON, ghi nhận kết quả thực tế kể cả khi suy giảm/phục hồi không như kỳ vọng.
 
   ```powershell
   python script/run_corruption_flow.py

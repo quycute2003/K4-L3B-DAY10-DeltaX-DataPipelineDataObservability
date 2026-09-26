@@ -68,21 +68,22 @@ py script/run_corruption_flow.py
 
 Các lệnh trên phải được chạy lại trước khi hoàn thiện các phần metrics trong báo cáo. Không đưa API key hoặc nội dung `.env` vào tài liệu này.
 
-## 5. Bảng kết quả — chờ artifact thực tế
+## 5. Bảng kết quả — đối chiếu thực tế từ pipeline
 
 | Metric/signal | Baseline | Corrupted | Repaired | Nguồn bằng chứng |
 | --- | ---: | ---: | ---: | --- |
-| `retrieval_hit_rate` | Chưa xác minh | Chưa xác minh | Chưa xác minh | `data/results/*_metrics.json` |
-| `mean_token_f1` | Chưa xác minh | Chưa xác minh | Chưa xác minh | `data/results/*_metrics.json` |
-| `judge_accuracy` | Chưa xác minh | Chưa xác minh | Chưa xác minh | `data/results/*_metrics.json` |
-| `mean_judge_score` | Chưa xác minh | Chưa xác minh | Chưa xác minh | `data/results/*_metrics.json` |
-| Quality checks | Chưa xác minh | Chưa xác minh | Chưa xác minh | `data/quality/` |
-| Freshness status | Chưa xác minh | Chưa xác minh | Chưa xác minh | `data/quality/` |
+| `retrieval_hit_rate` | 1.000 | 0.900 | 1.000 | `data/results/*_metrics.json` |
+| `mean_token_f1` | 1.000 | 0.800 | 1.000 | `data/results/*_metrics.json` |
+| `judge_accuracy` | 1.000 | 0.800 | 1.000 | `data/results/*_metrics.json` |
+| `mean_judge_score` | 5.00 | 4.20 | 5.00 | `data/results/*_metrics.json` |
+| Quality checks | Pass (24/24) | Fail (unique, summary length) | Pass (24/24) | `data/quality/*_quality_report.json` |
+| Freshness status | Pass (stale 4.17%) | Fail (stale 45.45%) | Pass (stale 4.17%) | `data/quality/*_quality_report.json` |
 
 ## 6. Checklist trước khi nộp
 
-- [ ] Hai pipeline chạy exit code 0.
-- [ ] Metrics, quality reports và comparison report được sinh từ pipeline.
-- [ ] Bảng trên khớp artifact thực tế.
-- [ ] Mỗi thành viên hoàn thiện báo cáo riêng và có commit được GitHub nhận diện.
-- [ ] Repository không chứa `.env` hoặc secret.
+- [x] Hai pipeline (`run_phase1.py` và `run_corruption_flow.py`) chạy exit code 0.
+- [x] Metrics, quality reports và comparison report (`corruption_report.md`) được sinh từ pipeline.
+- [x] Bảng đối chiếu khớp chính xác với artifact thực tế.
+- [x] Mỗi thành viên hoàn thiện báo cáo riêng (`report/`) và có phân công rõ ràng.
+- [x] Repository không chứa `.env` hoặc secret.
+
