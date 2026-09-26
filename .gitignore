@@ -2,6 +2,10 @@ solution/
 .env
 lab.txt
 .venv/
+venv/
+.tmp/
+.uv-cache/
+data/chroma/
 src/*.egg-info/
 lab/
 **/__pycache__/
