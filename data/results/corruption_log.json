@@ -1,0 +1,178 @@
+{
+  "input_rows": 24,
+  "output_rows": 22,
+  "events": [
+    {
+      "type": "drop_latest_records",
+      "paper_id": "10.1145/3637528.3671812",
+      "before": {
+        "published": "2026-07-22"
+      },
+      "after": null
+    },
+    {
+      "type": "drop_latest_records",
+      "paper_id": "10.1145/3637528.3671808",
+      "before": {
+        "published": "2026-07-19"
+      },
+      "after": null
+    },
+    {
+      "type": "drop_latest_records",
+      "paper_id": "10.1145/3637528.3671804",
+      "before": {
+        "published": "2026-07-05"
+      },
+      "after": null
+    },
+    {
+      "type": "drop_latest_records",
+      "paper_id": "10.1145/3637528.3671807",
+      "before": {
+        "published": "2026-06-25"
+      },
+      "after": null
+    },
+    {
+      "type": "drop_latest_records",
+      "paper_id": "10.1145/3637528.3671802",
+      "before": {
+        "published": "2026-06-12"
+      },
+      "after": null
+    },
+    {
+      "type": "blank_summary",
+      "paper_id": "10.1145/3637528.3671824",
+      "before": "An extended empirical study on tatic benchmarks fail to capture domain drift in enterprise knowledge bases. We establish a synthetic test generator that auto-creates paired evaluation sets whenever new corpora are ingested Further analysis on scaling parameters.",
+      "after": ""
+    },
+    {
+      "type": "inject_noise",
+      "paper_id": "10.1145/3637528.3671823",
+      "before": "An extended empirical study on ense vector search excels at conceptual similarity but struggles with exact acronyms and serial numbers. Reciprocal Rank Fusion of sparse lexical scores and dense embeddings achieves optimal recall Further analysis on scaling parameters.",
+      "after": "[CORRUPTED] xqz-9187 meaningless noise !!! An extended empirical study on ense vector search excels at conceptual similarity but struggles with exact acronyms and serial numbers. Reciprocal Rank Fusion of sparse lexical scores and dense embeddings achieves optimal recall Further analysis on scaling parameters."
+    },
+    {
+      "type": "truncate_title",
+      "paper_id": "10.1145/3637528.3671822",
+      "before": "Advanced Perspectives on Automated Data Quality Profiling with Great Expectations in CI/CD",
+      "after": "Advance"
+    },
+    {
+      "type": "stale_date",
+      "paper_id": "10.1145/3637528.3671821",
+      "before": "2026-06-09",
+      "after": "2025-06-09"
+    },
+    {
+      "type": "stale_date",
+      "paper_id": "10.1145/3637528.3671810",
+      "before": "2026-06-08",
+      "after": "2025-06-08"
+    },
+    {
+      "type": "blank_summary",
+      "paper_id": "10.1145/3637528.3671820",
+      "before": "An extended empirical study on single LLM is susceptible to confirmation bias when evaluating retrieved evidence. We demonstrate a multi-agent debate architecture where specialized verifier agents critique and corroborate citations Further analysis on scaling parameters.",
+      "after": ""
+    },
+    {
+      "type": "inject_noise",
+      "paper_id": "10.1145/3637528.3671819",
+      "before": "An extended empirical study on e introduce an automated fuzzing suite that corrupts text chunks by injecting noise, truncating titles, and blanking summaries. Experiments reveal critical failure thresholds for dense embedding retrieval Further analysis on scaling parameters.",
+      "after": "[CORRUPTED] xqz-9187 meaningless noise !!! An extended empirical study on e introduce an automated fuzzing suite that corrupts text chunks by injecting noise, truncating titles, and blanking summaries. Experiments reveal critical failure thresholds for dense embedding retrieval Further analysis on scaling parameters."
+    },
+    {
+      "type": "truncate_title",
+      "paper_id": "10.1145/3637528.3671818",
+      "before": "Advanced Perspectives on Semantic Layer Integration for Agentic Text-to-SQL Pipelines",
+      "after": "Advance"
+    },
+    {
+      "type": "stale_date",
+      "paper_id": "10.1145/3637528.3671817",
+      "before": "2026-06-05",
+      "after": "2025-06-05"
+    },
+    {
+      "type": "stale_date",
+      "paper_id": "10.1145/3637528.3671816",
+      "before": "2026-06-04",
+      "after": "2025-06-04"
+    },
+    {
+      "type": "blank_summary",
+      "paper_id": "10.1145/3637528.3671815",
+      "before": "An extended empirical study on oft-deletions in vector databases leave orphaned embeddings that lead to hallucinations. This paper designs an idempotent index synchronization protocol that guarantees complete purges of outdated vector artifacts Further analysis on scaling parameters.",
+      "after": ""
+    },
+    {
+      "type": "inject_noise",
+      "paper_id": "10.1145/3637528.3671814",
+      "before": "An extended empirical study on ilent data corruption in RAG pipelines degrades LLM answer faithfulness without throwing runtime errors. We introduce automated quality gates using Great Expectations 1.x to catch stale and malformed embeddings before serving Further analysis on scaling parameters.",
+      "after": "[CORRUPTED] xqz-9187 meaningless noise !!! An extended empirical study on ilent data corruption in RAG pipelines degrades LLM answer faithfulness without throwing runtime errors. We introduce automated quality gates using Great Expectations 1.x to catch stale and malformed embeddings before serving Further analysis on scaling parameters."
+    },
+    {
+      "type": "truncate_title",
+      "paper_id": "10.1145/3637528.3671813",
+      "before": "Advanced Perspectives on Agentic Retrieval-Augmented Generation for Knowledge-Intensive Tasks",
+      "after": "Advance"
+    },
+    {
+      "type": "stale_date",
+      "paper_id": "10.1145/3637528.3671801",
+      "before": "2026-05-20",
+      "after": "2025-05-20"
+    },
+    {
+      "type": "stale_date",
+      "paper_id": "10.1145/3637528.3671811",
+      "before": "2026-05-14",
+      "after": "2025-05-14"
+    },
+    {
+      "type": "blank_summary",
+      "paper_id": "10.1145/3637528.3671806",
+      "before": "Connecting LLMs directly to raw warehouse tables often results in schema misunderstandings. A governed semantic layer standardizes business metric definitions, dramatically boosting SQL generation accuracy.",
+      "after": ""
+    },
+    {
+      "type": "inject_noise",
+      "paper_id": "10.1145/3637528.3671809",
+      "before": "Hierarchical and semantic boundary chunking preserves code block contexts and markdown headings. Our benchmark demonstrates superior top-1 recall compared to fixed character length sliding windows.",
+      "after": "[CORRUPTED] xqz-9187 meaningless noise !!! Hierarchical and semantic boundary chunking preserves code block contexts and markdown headings. Our benchmark demonstrates superior top-1 recall compared to fixed character length sliding windows."
+    },
+    {
+      "type": "truncate_title",
+      "paper_id": "10.1145/3637528.3671803",
+      "before": "Mitigating Ghost Vectors in Dense Retrieval via Idempotent Indexing",
+      "after": "Mitigat"
+    },
+    {
+      "type": "stale_date",
+      "paper_id": "10.1145/3637528.3671805",
+      "before": "2026-03-28",
+      "after": "2025-03-28"
+    },
+    {
+      "type": "duplicate_rows",
+      "paper_id": "10.1145/3637528.3671810",
+      "before": 1,
+      "after": 2
+    },
+    {
+      "type": "duplicate_rows",
+      "paper_id": "10.1145/3637528.3671816",
+      "before": 1,
+      "after": 2
+    },
+    {
+      "type": "duplicate_rows",
+      "paper_id": "10.1145/3637528.3671811",
+      "before": 1,
+      "after": 2
+    }
+  ]
+}
